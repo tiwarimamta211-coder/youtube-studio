@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TubeStudio Pro — YouTube Video Maker</title>
+<link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@300;400;500;600;700;800;900&family=Clash+Display:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════
+   RESET & ROOT
+══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:        #0f0f0f;
+  --bg2:       #161616;
+  --surface:   #1c1c1c;
+  --card:      #202020;
+  --card2:     #272727;
+  --lift:      #2e2e2e;
+  --border:    #2a2a2a;
+  --border2:   #3a3a3a;
+  --red:       #ff0000;
+  --red2:      #cc0000;
+  --red-g:     rgba(255,0,0,.2);
+  --red-s:     rgba(255,0,0,.08);
+  --pink:      #ff4e8b;
+  --pink-s:    rgba(255,78,139,.08);
+  --blue:      #3ea6ff;
+  --blue-s:    rgba(62,166,255,.08);
+  --green:     #2dcc70;
+  --green-s:   rgba(45,204,112,.08);
+  --amber:     #ffb300;
+  --amber-s:   rgba(255,179,0,.08);
+  --purple:    #a855f7;
+  --purple-s:  rgba(168,85,247,.08);
+  --text:      #f1f1f1;
+  --text2:     #aaaaaa;
+  --text3:     #606060;
+  --text4:     #3a3a3a;
+  --sidebar-w: 240px;
+  --r:         12px;
+  --shadow:    0 8px 32px rgba(0,0,0,.6);
+}
+
+html,body{height:100%;overflow:hidden;font-family:'Satoshi',sans-serif}
+body{background:var(--bg);color:var(--text);display:flex;flex-direction:column}
+
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+/* ══════════════════════════════════════
+   TOP NAV (YouTube style)
+══════════════════════════════════════ */
+.topnav{
+  height:56px;background:var(--bg);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 16px;gap:12px;
+  flex-shrink:0;z-index:30;position:relative;
+}
+.tn-left{display:flex;align-items:center;gap:16px}
+.hamburger-btn{
+  width:40px;height:40px;border-radius:50%;background:none;border:none;
+  cursor:pointer;color:var(--text2);display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.hamburger-btn:hover{background:var(--card2)}
+.hamburger-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.logo{display:flex;align-items:center;gap:5px;cursor:pointer}
+.logo-icon{
+  width:32px;height:32px;background:var(--red);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.logo-icon svg{width:18px;height:14px}
+.logo-text{
+  font-family:'Clash Display',sans-serif;
+  font-size:1.05rem;font-weight:600;letter-spacing:-.01em;
+  color:var(--text);
+}
+.logo-text span{color:var(--text3);font-weight:400;font-size:.85rem}
+
+/* Search bar */
+.search-bar{
+  flex:1;max-width:540px;margin:0 16px;
+  display:flex;align-items:center;gap:0;
+}
+.search-input-wrap{
+  flex:1;display:flex;align-items:center;
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:22px 0 0 22px;overflow:hidden;
+  transition:border-color .15s;
+}
+.search-input-wrap:focus-within{border-color:var(--blue)}
+.search-input{
+  flex:1;padding:8px 16px;background:none;border:none;outline:none;
+  font-family:'Satoshi',sans-serif;font-size:.88rem;color:var(--text);
+}
+.search-input::placeholder{color:var(--text3)}
+.search-btn{
+  padding:0 20px;height:40px;
+  background:var(--card2);border:1px solid var(--border2);border-left:none;
+  border-radius:0 22px 22px 0;cursor:pointer;color:var(--text2);
+  display:flex;align-items:center;gap:6px;font-size:.88rem;
+  transition:background .15s;
+}
+.search-btn:hover{background:var(--lift)}
+.search-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+
+.tn-right{display:flex;align-items:center;gap:8px}
+.create-btn{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 16px;border-radius:20px;
+  background:var(--card2);border:1px solid var(--border2);
+  color:var(--text);font-size:.82rem;font-weight:600;cursor:pointer;
+  transition:all .15s;font-family:'Satoshi',sans-serif;
+}
+.create-btn:hover{background:var(--lift)}
+.create-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
+.icon-btn{
+  width:40px;height:40px;border-radius:50%;background:none;border:none;
+  cursor:pointer;color:var(--text2);display:flex;align-items:center;justify-content:center;
+  transition:background .15s;position:relative;
+}
+.icon-btn:hover{background:var(--card2)}
+.icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.notif-dot{
+  position:absolute;top:6px;right:6px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--red);border:1.5px solid var(--bg);
+}
+.channel-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--red),var(--pink));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.78rem;font-weight:800;color:white;cursor:pointer;
+}
+
+/* ══════════════════════════════════════
+   BODY LAYOUT
+══════════════════════════════════════ */
+.body-wrap{display:flex;flex:1;overflow:hidden}
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
+.sidebar{
+  width:var(--sidebar-w);background:var(--bg);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  flex-shrink:0;overflow-y:auto;z-index:20;
+}
+.sidebar.mini{width:72px}
+.sb-section{padding:12px 0 4px}
+.sb-section-title{
+  font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--text3);padding:6px 20px;
+}
+.sidebar.mini .sb-section-title{display:none}
+.ni{
+  display:flex;align-items:center;gap:14px;
+  padding:9px 20px;cursor:pointer;border-radius:10px;margin:0 6px 1px;
+  font-size:.84rem;font-weight:500;color:var(--text2);
+  transition:all .15s;white-space:nowrap;overflow:hidden;
+}
+.sidebar.mini .ni{padding:9px;justify-content:center;gap:0}
+.ni:hover{background:var(--card);color:var(--text)}
+.ni.active{background:var(--card2);color:var(--text);font-weight:700}
+.ni svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex-shrink:0}
+.ni-label{flex:1}
+.sidebar.mini .ni-label{display:none}
+.ni-pill{
+  padding:1px 7px;border-radius:20px;
+  font-size:.6rem;font-weight:800;flex-shrink:0;
+}
+.sidebar.mini .ni-pill{display:none}
+.np-r{background:var(--red-s);color:var(--red)}
+.np-g{background:var(--green-s);color:var(--green)}
+.np-b{background:var(--blue-s);color:var(--blue)}
+.np-a{background:var(--amber-s);color:var(--amber)}
+.np-p{background:var(--purple-s);color:var(--purple)}
+.np-pk{background:var(--pink-s);color:var(--pink)}
+
+.sb-divider{height:1px;background:var(--border);margin:8px 0}
+.sb-channel{
+  padding:12px 16px;display:flex;align-items:center;gap:10px;margin:4px 6px;
+  border-radius:10px;cursor:pointer;transition:background .15s;
+}
+.sb-channel:hover{background:var(--card)}
+.sb-ch-avatar{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--red),var(--pink));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:800;color:white;
+}
+.sidebar.mini .sb-ch-avatar{margin:0 auto}
+.sb-ch-name{font-size:.8rem;font-weight:600;color:var(--text)}
+.sidebar.mini .sb-ch-name{display:none}
+.sb-ch-subs{font-size:.68rem;color:var(--text3)}
+
+/* ══════════════════════════════════════
+   MAIN CONTENT
+══════════════════════════════════════ */
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.page{display:none;height:100%;overflow-y:auto;padding:24px}
+.page.active{display:block;animation:pgIn .2s ease}
+@keyframes pgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ══════════════════════════════════════
+   DASHBOARD (Studio style)
+══════════════════════════════════════ */
+.studio-header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:20px;
+}
+.sh-title{
+  font-family:'Clash Display',sans-serif;
+  font-size:1.6rem;font-weight:700;color:var(--text);
+  letter-spacing:-.02em;margin-bottom:3px;
+}
+.sh-sub{font-size:.82rem;color:var(--text3)}
+
+/* Channel card */
+.channel-card{
+  background:linear-gradient(135deg,#1a0505,#1a0a1a);
+  border:1px solid rgba(255,0,0,.2);border-radius:16px;
+  padding:24px;margin-bottom:20px;position:relative;overflow:hidden;
+}
+.channel-card::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,0,0,.12),transparent 70%);
+}
+.cc-top{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.cc-avatar{
+  width:72px;height:72px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--red),var(--pink));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Clash Display',sans-serif;font-size:1.5rem;font-weight:700;color:white;
+  box-shadow:0 4px 20px rgba(255,0,0,.3);
+}
+.cc-name{font-family:'Clash Display',sans-serif;font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:3px}
+.cc-handle{font-size:.82rem;color:var(--text3);font-family:'JetBrains Mono',monospace}
+.cc-verified{
+  display:inline-flex;align-items:center;gap:4px;margin-top:4px;
+  font-size:.72rem;color:var(--blue);font-weight:600;
+}
+.cc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.cc-stat{
+  background:rgba(255,255,255,.04);border-radius:10px;
+  padding:12px 14px;border:1px solid rgba(255,255,255,.06);
+}
+.cc-stat-val{font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:2px}
+.cc-stat-lbl{font-size:.67rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.07em}
+.cc-stat-sub{font-size:.62rem;color:var(--text3);margin-top:2px}
+
+/* Upload Options */
+.upload-section{margin-bottom:20px}
+.upload-title{font-family:'Clash Display',sans-serif;font-size:1.1rem;font-weight:600;margin-bottom:14px;color:var(--text)}
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.upload-card{
+  border-radius:16px;padding:24px;cursor:pointer;
+  transition:all .2s;position:relative;overflow:hidden;
+  border:2px solid transparent;
+}
+.upload-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.upload-card.long{
+  background:linear-gradient(135deg,#1a0a05,#1a1405);
+  border-color:rgba(255,179,0,.2);
+}
+.upload-card.long:hover{border-color:var(--amber)}
+.upload-card.short{
+  background:linear-gradient(135deg,#0a1a1a,#051520);
+  border-color:rgba(255,78,139,.2);
+}
+.upload-card.short:hover{border-color:var(--pink)}
+.uc-glow{position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;filter:blur(40px);opacity:.3}
+.uc-icon{font-size:2.5rem;margin-bottom:12px}
+.uc-title{font-family:'Clash Display',sans-serif;font-size:1.1rem;font-weight:600;margin-bottom:5px}
+.uc-desc{font-size:.78rem;color:var(--text2);line-height:1.5;margin-bottom:14px}
+.uc-features{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.uc-tag{
+  padding:2px 9px;border-radius:20px;
+  font-size:.65rem;font-weight:700;letter-spacing:.03em;
+  background:rgba(255,255,255,.06);color:var(--text2);border:1px solid rgba(255,255,255,.08);
+}
+.uc-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:10px 20px;border-radius:20px;border:none;
+  font-family:'Satoshi',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
+  transition:all .15s;
+}
+.uc-btn.amber{background:var(--amber);color:#000}
+.uc-btn.pink{background:var(--pink);color:#fff}
+.uc-btn:hover{transform:scale(1.03)}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px 16px;
+  transition:all .15s;
+}
+.stat-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.stat-card::before{content:'';display:block;width:3px;height:100%;position:absolute;left:0;top:0;background:var(--stripe,var(--red));border-radius:4px 0 0 4px}
+.stat-card{position:relative;overflow:hidden}
+.sc-lbl{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px}
+.sc-val{font-size:1.4rem;font-weight:800;color:var(--text);font-family:'JetBrains Mono',monospace;margin-bottom:3px;letter-spacing:-.02em}
+.sc-sub{font-size:.7rem;color:var(--text3)}
+.trend-up{color:var(--green);font-weight:700}
+.trend-dn{color:var(--red);font-weight:700}
+
+/* ══════════════════════════════════════
+   VIDEO UPLOAD PAGE
+══════════════════════════════════════ */
+.upload-wizard{max-width:860px}
+.wizard-steps{
+  display:flex;align-items:center;gap:0;margin-bottom:28px;
+}
+.ws{
+  display:flex;align-items:center;gap:8px;padding:10px 20px;
+  font-size:.82rem;font-weight:600;cursor:pointer;
+  border-radius:8px;transition:all .15s;color:var(--text3);
+}
+.ws.active{color:var(--text);background:var(--card);border:1px solid var(--border2)}
+.ws.done{color:var(--green)}
+.ws-num{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:800;
+  background:var(--card2);border:1px solid var(--border2);color:var(--text3);
+}
+.ws.active .ws-num{background:var(--red);border-color:var(--red);color:white}
+.ws.done .ws-num{background:var(--green);border-color:var(--green);color:white}
+.ws-arrow{color:var(--text4);margin:0 4px;font-size:1rem}
+
+/* Drop zone */
+.drop-zone{
+  border:2px dashed var(--border2);border-radius:16px;
+  padding:60px 40px;text-align:center;cursor:pointer;
+  transition:all .2s;background:var(--card);
+  position:relative;overflow:hidden;
+}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--red);background:var(--red-s)}
+.dz-icon{font-size:3rem;margin-bottom:16px;display:block}
+.dz-title{font-family:'Clash Display',sans-serif;font-size:1.1rem;font-weight:600;margin-bottom:6px}
+.dz-sub{font-size:.82rem;color:var(--text3);margin-bottom:20px;line-height:1.5}
+.dz-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 24px;border-radius:20px;
+  background:var(--red);border:none;color:white;
+  font-family:'Satoshi',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;
+  transition:all .15s;
+}
+.dz-btn:hover{background:var(--red2);transform:scale(1.02)}
+.dz-formats{font-size:.72rem;color:var(--text3);margin-top:14px}
+
+/* Shorts drop zone */
+.shorts-drop{
+  border:2px dashed var(--border2);border-radius:16px;
+  padding:40px;text-align:center;cursor:pointer;
+  background:var(--card);transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;
+}
+.shorts-preview{
+  width:160px;height:284px;border-radius:16px;
+  background:var(--card2);border:2px dashed var(--border2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin-bottom:16px;position:relative;overflow:hidden;
+}
+.shorts-preview-inner{font-size:2.5rem;color:var(--text3)}
+.sp-label{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:8px;background:linear-gradient(to top,rgba(0,0,0,.8),transparent);
+  font-size:.65rem;color:var(--text2);font-weight:600;text-align:center;
+}
+.shorts-drop:hover{border-color:var(--pink)}
+
+/* Form elements */
+.form-section{margin-bottom:20px}
+.form-section-title{
+  font-size:.76rem;font-weight:700;color:var(--text2);
+  text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:6px;
+}
+.form-section-title svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid.g1{grid-template-columns:1fr}
+.form-grid.g3{grid-template-columns:1fr 1fr 1fr}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg.s2{grid-column:span 2}
+.fl{font-size:.7rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
+.fi,.fs,.fta{
+  padding:9px 12px;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:9px;
+  color:var(--text);font-family:'Satoshi',sans-serif;
+  font-size:.84rem;outline:none;width:100%;
+  transition:border-color .15s,box-shadow .15s;
+}
+.fi:focus,.fs:focus,.fta:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-s)}
+.fi::placeholder,.fta::placeholder{color:var(--text3)}
+.fs{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23606060' d='M5 6L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.fta{resize:vertical;min-height:90px}
+.char-count{font-size:.68rem;color:var(--text3);text-align:right}
+
+/* Thumbnail designer */
+.thumbnail-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px;
+}
+.thumb-opt{
+  border-radius:10px;overflow:hidden;cursor:pointer;
+  border:2px solid var(--border);aspect-ratio:16/9;
+  position:relative;transition:all .15s;
+}
+.thumb-opt:hover{border-color:var(--red)}
+.thumb-opt.selected{border-color:var(--red);box-shadow:0 0 0 2px rgba(255,0,0,.3)}
+.thumb-opt-inner{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  font-size:.78rem;font-weight:700;color:white;text-align:center;padding:8px;
+  line-height:1.3;
+}
+.thumb-check{
+  position:absolute;top:6px;right:6px;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--red);display:none;align-items:center;justify-content:center;
+  font-size:.6rem;color:white;
+}
+.thumb-opt.selected .thumb-check{display:flex}
+
+/* Tags input */
+.tags-wrap{
+  display:flex;flex-wrap:wrap;gap:6px;padding:8px;
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:9px;min-height:44px;cursor:text;
+  transition:border-color .15s;
+}
+.tags-wrap:focus-within{border-color:var(--red)}
+.tag-item{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 10px;border-radius:20px;
+  background:var(--card2);border:1px solid var(--border2);
+  font-size:.75rem;color:var(--text2);
+}
+.tag-item button{background:none;border:none;cursor:pointer;color:var(--text3);font-size:.65rem;transition:color .1s;padding:0 1px}
+.tag-item button:hover{color:var(--red)}
+.tags-input{
+  flex:1;min-width:80px;background:none;border:none;outline:none;
+  font-size:.82rem;color:var(--text);font-family:'Satoshi',sans-serif;padding:2px 4px;
+}
+
+/* Toggle */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0}
+.toggle-info{flex:1}
+.toggle-title{font-size:.84rem;font-weight:600;color:var(--text);margin-bottom:1px}
+.toggle-sub{font-size:.72rem;color:var(--text3)}
+.toggle-sw{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle-sw input{opacity:0;position:absolute}
+.sw-track{
+  position:absolute;inset:0;background:var(--border2);border-radius:12px;
+  cursor:pointer;transition:background .2s;
+}
+.sw-track::before{
+  content:'';position:absolute;width:18px;height:18px;border-radius:50%;
+  background:white;left:3px;top:3px;transition:transform .2s;
+  box-shadow:0 1px 4px rgba(0,0,0,.3);
+}
+.toggle-sw input:checked+.sw-track{background:var(--red)}
+.toggle-sw input:checked+.sw-track::before{transform:translateX(20px)}
+
+/* Visibility options */
+.vis-opts{display:flex;gap:10px;margin-top:8px}
+.vis-opt{
+  flex:1;padding:12px;border-radius:10px;cursor:pointer;
+  border:2px solid var(--border);text-align:center;transition:all .15s;
+  background:var(--card);
+}
+.vis-opt:hover,.vis-opt.selected{border-color:var(--red);background:var(--red-s)}
+.vis-opt-icon{font-size:1.4rem;margin-bottom:4px}
+.vis-opt-title{font-size:.78rem;font-weight:700;color:var(--text)}
+.vis-opt-sub{font-size:.65rem;color:var(--text3);margin-top:1px}
+
+/* Schedule */
+.schedule-section{
+  background:var(--card2);border-radius:10px;padding:14px;
+  border:1px solid var(--border);margin-top:10px;display:none;
+}
+.schedule-section.open{display:block}
+
+/* End screens & Cards section */
+.end-screen-preview{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;aspect-ratio:16/9;position:relative;
+  display:flex;align-items:center;justify-content:center;margin-bottom:12px;
+  overflow:hidden;
+}
+.end-screen-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,#1a1a2e,#16213e);
+}
+.end-card{
+  position:absolute;width:80px;height:56px;border-radius:6px;
+  background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:.55rem;color:white;font-weight:700;text-align:center;
+  cursor:move;transition:all .15s;
+}
+.end-card:hover{background:rgba(255,0,0,.3);border-color:var(--red)}
+.end-card-icon{font-size:1.1rem;margin-bottom:2px}
+
+/* ══════════════════════════════════════
+   VIDEO MANAGER
+══════════════════════════════════════ */
+.video-list-header{
+  display:flex;align-items:center;gap:12px;margin-bottom:16px;
+}
+.filter-tabs{display:flex;gap:6px}
+.ftab{
+  padding:7px 16px;border-radius:20px;
+  background:none;border:1px solid var(--border);
+  color:var(--text2);font-size:.8rem;font-weight:600;cursor:pointer;
+  font-family:'Satoshi',sans-serif;transition:all .15s;
+}
+.ftab:hover{border-color:var(--border2);color:var(--text)}
+.ftab.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+.video-table{width:100%;border-collapse:collapse}
+.video-table thead th{
+  padding:10px 14px;text-align:left;
+  font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--text3);border-bottom:1px solid var(--border);background:var(--card2);
+}
+.video-table tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+.video-table tbody tr:hover{background:var(--card)}
+.video-table tbody td{padding:12px 14px;vertical-align:middle}
+.vt-thumb{
+  width:120px;height:68px;border-radius:8px;
+  object-fit:cover;display:block;flex-shrink:0;
+  position:relative;overflow:hidden;
+}
+.vt-thumb-inner{
+  width:120px;height:68px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;flex-shrink:0;
+}
+.vt-title{font-size:.84rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.vt-time{font-size:.7rem;color:var(--text3)}
+.vt-actions{display:flex;gap:6px}
+.va-btn{
+  padding:5px 10px;border-radius:7px;
+  background:var(--card2);border:1px solid var(--border);
+  color:var(--text2);font-size:.72rem;font-weight:600;cursor:pointer;
+  font-family:'Satoshi',sans-serif;transition:all .12s;
+  display:flex;align-items:center;gap:4px;
+}
+.va-btn:hover{border-color:var(--border2);color:var(--text)}
+.va-btn svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
+.va-btn.red{background:rgba(255,0,0,.1);border-color:rgba(255,0,0,.3);color:var(--red)}
+.va-btn.red:hover{background:rgba(255,0,0,.2)}
+
+/* Video type badge */
+.vtype{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 8px;border-radius:4px;font-size:.62rem;font-weight:800;
+  text-transform:uppercase;letter-spacing:.04em;
+}
+.vtype.long{background:rgba(255,179,0,.15);color:var(--amber)}
+.vtype.short{background:rgba(255,78,139,.15);color:var(--pink)}
+.vtype.live{background:rgba(255,0,0,.15);color:var(--red)}
+
+/* Status badge */
+.vstatus{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 8px;border-radius:20px;font-size:.65rem;font-weight:700;
+}
+.vstatus::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.vs-pub{background:rgba(45,204,112,.12);color:var(--green)}
+.vs-pri{background:rgba(255,179,0,.12);color:var(--amber)}
+.vs-sch{background:rgba(62,166,255,.12);color:var(--blue)}
+.vs-dft{background:rgba(96,96,96,.2);color:var(--text3)}
+
+/* ══════════════════════════════════════
+   ANALYTICS
+══════════════════════════════════════ */
+.analytics-period{display:flex;gap:6px;margin-bottom:16px}
+.period-btn{
+  padding:6px 14px;border-radius:20px;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--text2);font-size:.78rem;font-weight:600;cursor:pointer;
+  font-family:'Satoshi',sans-serif;transition:all .12s;
+}
+.period-btn.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+.period-btn:hover:not(.active){border-color:var(--border2);color:var(--text)}
+
+/* Charts */
+.chart-area{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:18px;margin-bottom:16px;
+}
+.chart-title{font-size:.86rem;font-weight:700;color:var(--text);margin-bottom:4px}
+.chart-sub{font-size:.74rem;color:var(--text3);margin-bottom:16px}
+.line-chart{
+  height:120px;display:flex;align-items:flex-end;gap:0;
+  position:relative;border-bottom:1px solid var(--border);padding-bottom:4px;
+}
+.line-chart-area{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(255,0,0,.1),transparent);
+  clip-path:polygon(0 100%,3% 60%,10% 55%,18% 40%,25% 45%,33% 30%,40% 25%,48% 20%,55% 15%,62% 10%,70% 12%,77% 8%,85% 5%,92% 3%,100% 2%,100% 100%);
+}
+.bar-chart-wrap{display:flex;align-items:flex-end;gap:5px;height:100px;padding:0 4px}
+.bc-col-w{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bc-bar{width:100%;border-radius:4px 4px 0 0;min-height:2px;transition:height .6s}
+.bc-lbl{font-size:.58rem;color:var(--text3);font-weight:600}
+
+/* Top videos */
+.top-video-row{
+  display:flex;align-items:center;gap:12px;padding:10px 0;
+  border-bottom:1px solid var(--border);
+}
+.top-video-row:last-child{border-bottom:none}
+.tv-rank{
+  width:24px;height:24px;border-radius:6px;flex-shrink:0;
+  background:var(--card2);display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:800;color:var(--text2);
+}
+.tv-thumb{
+  width:80px;height:45px;border-radius:6px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+}
+.tv-title{font-size:.8rem;font-weight:600;color:var(--text);margin-bottom:2px}
+.tv-stats{font-size:.7rem;color:var(--text3)}
+.tv-views{
+  margin-left:auto;text-align:right;flex-shrink:0;
+  font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700;color:var(--text);
+}
+
+/* ══════════════════════════════════════
+   COMMENTS
+══════════════════════════════════════ */
+.comment-row{
+  display:flex;gap:12px;padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+.comment-row:last-child{border-bottom:none}
+.c-avatar{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:800;color:white;
+}
+.c-name{font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:2px}
+.c-time{font-size:.68rem;color:var(--text3)}
+.c-text{font-size:.82rem;color:var(--text2);line-height:1.5;margin:4px 0 8px}
+.c-actions{display:flex;gap:10px}
+.c-act{
+  font-size:.72rem;color:var(--text3);cursor:pointer;
+  display:flex;align-items:center;gap:4px;
+  transition:color .12s;font-weight:600;
+}
+.c-act:hover{color:var(--text)}
+.c-act svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.c-badge{
+  padding:2px 7px;border-radius:20px;font-size:.6rem;font-weight:800;
+  background:var(--red-s);color:var(--red);margin-left:6px;
+}
+
+/* ══════════════════════════════════════
+   LIVE STREAM
+══════════════════════════════════════ */
+.live-setup-card{
+  background:linear-gradient(135deg,#1a0505,#0a0010);
+  border:1px solid rgba(255,0,0,.25);border-radius:16px;
+  padding:24px;margin-bottom:16px;position:relative;overflow:hidden;
+}
+.live-dot{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:20px;
+  background:var(--red-s);border:1px solid rgba(255,0,0,.3);
+  font-size:.72rem;font-weight:800;color:var(--red);margin-bottom:12px;
+}
+.live-dot::before{
+  content:'';width:6px;height:6px;border-radius:50%;background:var(--red);
+  animation:liveBlink 1s ease-in-out infinite;
+}
+@keyframes liveBlink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ══════════════════════════════════════
+   MONETIZATION
+══════════════════════════════════════ */
+.monetize-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:18px;margin-bottom:12px;
+  display:flex;align-items:center;gap:16px;
+  transition:all .15s;cursor:pointer;
+}
+.monetize-card:hover{border-color:var(--border2);transform:translateX(3px)}
+.mc-icon{
+  width:44px;height:44px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+}
+.mc-title{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:2px}
+.mc-desc{font-size:.74rem;color:var(--text3);line-height:1.4}
+.mc-right{margin-left:auto;flex-shrink:0}
+.mc-earn{
+  font-family:'JetBrains Mono',monospace;font-size:.88rem;
+  font-weight:700;color:var(--green);text-align:right;margin-bottom:2px;
+}
+.mc-sub{font-size:.65rem;color:var(--text3)}
+
+/* ══════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════ */
+.btn{
+  padding:9px 20px;border-radius:20px;border:none;
+  font-family:'Satoshi',sans-serif;font-size:.82rem;font-weight:700;
+  cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .15s;
+}
+.btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
+.btn-red{background:var(--red);color:white}
+.btn-red:hover{background:var(--red2);transform:translateY(-1px)}
+.btn-ghost{background:var(--card2);border:1px solid var(--border2);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--border);color:var(--text)}
+.btn-sm{padding:7px 14px;font-size:.76rem;border-radius:16px}
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.8);
+  backdrop-filter:blur(10px);z-index:500;
+  display:none;align-items:center;justify-content:center;padding:16px;
+}
+.modal-bg.open{display:flex}
+.modal{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;width:100%;
+  max-height:92vh;display:flex;flex-direction:column;
+  box-shadow:0 32px 80px rgba(0,0,0,.8);
+  animation:mIn .25s cubic-bezier(.34,1.2,.64,1);overflow:hidden;
+}
+@keyframes mIn{from{opacity:0;transform:scale(.93) translateY(12px)}to{opacity:1;transform:none}}
+.modal.lg{max-width:780px}.modal.md{max-width:560px}.modal.sm{max-width:420px}
+.mh{
+  padding:16px 22px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.mh-title{font-size:.92rem;font-weight:700;color:var(--text);font-family:'Clash Display',sans-serif}
+.mx{
+  width:28px;height:28px;border-radius:50%;
+  background:none;border:none;color:var(--text2);cursor:pointer;
+  font-size:.85rem;display:flex;align-items:center;justify-content:center;
+  transition:background .12s;
+}
+.mx:hover{background:var(--card2)}
+.mb-body{padding:20px 22px;overflow-y:auto;flex:1}
+.mf{
+  padding:12px 22px;border-top:1px solid var(--border);
+  display:flex;justify-content:flex-end;gap:8px;flex-shrink:0;background:var(--surface);
+}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+.toasts{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{
+  padding:10px 16px;background:var(--card);border:1px solid var(--border);
+  border-radius:10px;color:var(--text);font-size:.8rem;font-weight:600;
+  box-shadow:var(--shadow);animation:tIn .2s ease;display:flex;align-items:center;gap:8px;
+}
+.toast.ok{border-color:rgba(45,204,112,.4);color:var(--green)}
+.toast.err{border-color:rgba(255,0,0,.4);color:var(--red)}
+.toast.info{border-color:rgba(62,166,255,.4);color:var(--blue)}
+@keyframes tIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+
+/* ══════════════════════════════════════
+   MISC
+══════════════════════════════════════ */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.ph{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.ph-t{font-size:.86rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.ph-t svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.ph-acts{display:flex;gap:6px}
+.pb{padding:16px 18px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px}
+.mb16{margin-bottom:16px}
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-icon{font-size:2.5rem;margin-bottom:10px}
+.empty h3{font-size:.9rem;font-weight:600;color:var(--text2);margin-bottom:4px}
+.empty p{font-size:.78rem}
+
+/* Progress bar */
+.prog-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin:8px 0}
+.prog-fill{height:100%;border-radius:2px;transition:width .4s ease}
+
+/* Upload progress */
+.upload-progress{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:18px;margin-bottom:16px;display:none;
+}
+.upload-progress.show{display:block}
+.up-title{font-size:.86rem;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.up-file{
+  display:flex;align-items:center;gap:12px;padding:10px 12px;
+  background:var(--surface);border-radius:9px;margin-bottom:8px;border:1px solid var(--border);
+}
+.up-file-icon{font-size:1.2rem;flex-shrink:0}
+.up-file-name{font-size:.82rem;font-weight:600;color:var(--text);margin-bottom:3px}
+.up-file-size{font-size:.7rem;color:var(--text3)}
+.up-pct{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700;color:var(--red);margin-left:auto;flex-shrink:0}
+
+/* Shorts page specific */
+.shorts-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  overflow:hidden;
+}
+.sc-preview{
+  aspect-ratio:9/16;max-height:320px;width:180px;flex-shrink:0;
+  border-radius:var(--r);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;
+}
+
+/* Responsive */
+@media(max-width:900px){
+  .sidebar{position:fixed;top:56px;bottom:0;left:0;z-index:50;transform:translateX(-100%);transition:transform .3s}
+  .sidebar.mobile-show{transform:translateX(0);box-shadow:8px 0 40px rgba(0,0,0,.6)}
+  .upload-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .cc-stats{grid-template-columns:repeat(2,1fr)}
+  .g2,.g3{grid-template-columns:1fr}
+  .search-bar{display:none}
+}
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .fg.s2{grid-column:unset}
+  .thumbnail-grid{grid-template-columns:1fr 1fr}
+  .vis-opts{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════ TOP NAV ══════ -->
+<div class="topnav">
+  <div class="tn-left">
+    <button class="hamburger-btn" id="hamBtn">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="logo" onclick="showPage('dashboard')">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 18" fill="none"><rect width="24" height="18" rx="4" fill="#ff0000"/><polygon points="10,5 10,13 17,9" fill="white"/></svg>
+      </div>
+      <div>
+        <div class="logo-text">TubeStudio <span>Pro</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <div class="search-input-wrap">
+      <input class="search-input" placeholder="Search videos, analytics, comments…"/>
+    </div>
+    <button class="search-btn">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+  </div>
+
+  <div class="tn-right">
+    <button class="create-btn" onclick="openModal('quickCreate')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Create
+    </button>
+    <button class="icon-btn" onclick="showPage('dashboard')">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </button>
+    <button class="icon-btn" onclick="showPage('analytics')">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    </button>
+    <button class="icon-btn" onclick="showPage('comments')">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <div class="notif-dot"></div>
+    </button>
+    <div class="channel-avatar" onclick="showToast('Channel Settings','info')">YT</div>
+  </div>
+</div>
+
+<!-- ══════ BODY ══════ -->
+<div class="body-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-section">
+      <div class="ni active" data-page="dashboard">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span class="ni-label">Dashboard</span>
+      </div>
+      <div class="ni" data-page="upload-long">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span class="ni-label">Upload Long Video</span>
+        <span class="ni-pill np-a">HD</span>
+      </div>
+      <div class="ni" data-page="upload-short">
+        <svg viewBox="0 0 24 24"><path d="M15 10l4.553-2.069A1 1 0 0121 8.87V15.13a1 1 0 01-1.447.9L15 14"/><rect x="1" y="6" width="14" height="12" rx="2"/></svg>
+        <span class="ni-label">Upload Short</span>
+        <span class="ni-pill np-pk">Short</span>
+      </div>
+    </div>
+
+    <div class="sb-divider"></div>
+
+    <div class="sb-section">
+      <div class="sb-section-title">Manage</div>
+      <div class="ni" data-page="videos">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span class="ni-label">Content</span>
+        <span class="ni-pill np-b">24</span>
+      </div>
+      <div class="ni" data-page="analytics">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span class="ni-label">Analytics</span>
+      </div>
+      <div class="ni" data-page="comments">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <span class="ni-label">Comments</span>
+        <span class="ni-pill np-r">8</span>
+      </div>
+      <div class="ni" data-page="live">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 010 8.49m-8.49-.01a6 6 0 010-8.49m11.31-2.82a10 10 0 010 14.14m-14.14 0a10 10 0 010-14.14"/></svg>
+        <span class="ni-label">Live Stream</span>
+      </div>
+      <div class="ni" data-page="playlists">
+        <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span class="ni-label">Playlists</span>
+        <span class="ni-pill np-p">6</span>
+      </div>
+    </div>
+
+    <div class="sb-divider"></div>
+
+    <div class="sb-section">
+      <div class="sb-section-title">Grow</div>
+      <div class="ni" data-page="monetize">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        <span class="ni-label">Monetization</span>
+        <span class="ni-pill np-g">ON</span>
+      </div>
+      <div class="ni" data-page="subtitles">
+        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 12h10M7 16h5"/></svg>
+        <span class="ni-label">Subtitles / CC</span>
+      </div>
+      <div class="ni" data-page="endscreen">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        <span class="ni-label">End Screen & Cards</span>
+      </div>
+    </div>
+
+    <div class="sb-divider"></div>
+    <div class="sb-section">
+      <div class="sb-section-title">Channels</div>
+      <div class="sb-channel" data-page="dashboard">
+        <div class="sb-ch-avatar">T</div>
+        <div>
+          <div class="sb-ch-name">TechTalks Hindi</div>
+          <div class="sb-ch-subs">1.24M subscribers</div>
+        </div>
+      </div>
+      <div class="sb-channel" data-page="dashboard">
+        <div class="sb-ch-avatar" style="background:linear-gradient(135deg,var(--purple),var(--blue))">V</div>
+        <div>
+          <div class="sb-ch-name">Vlogs India</div>
+          <div class="sb-ch-subs">84.2K subscribers</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="page active" id="page-dashboard">
+      <div class="studio-header">
+        <div><div class="sh-title">Channel Studio</div><div class="sh-sub">Manage, upload, and grow your YouTube channel</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="showToast('Opening YouTube Studio…','info')">📊 Full Analytics</button>
+          <button class="btn btn-red btn-sm" onclick="showPage('upload-long')">
+            <svg viewBox="0 0 24 24"><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/></svg>
+            Upload Video
+          </button>
+        </div>
+      </div>
+
+      <!-- Channel card -->
+      <div class="channel-card">
+        <div class="cc-top">
+          <div class="cc-avatar">TT</div>
+          <div>
+            <div class="cc-name">TechTalks Hindi</div>
+            <div class="cc-handle">@techtalkshindi</div>
+            <div class="cc-verified">✓ Verified · YouTube Partner</div>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm" onclick="showToast('Customizing channel…','info')">Customize</button>
+            <button class="btn btn-ghost btn-sm" onclick="showToast('Opening channel…','info')">View Channel</button>
+          </div>
+        </div>
+        <div class="cc-stats">
+          <div class="cc-stat"><div class="cc-stat-val">1.24M</div><div class="cc-stat-lbl">Subscribers</div><div class="cc-stat-sub">+8.4K this month</div></div>
+          <div class="cc-stat"><div class="cc-stat-val">284M</div><div class="cc-stat-lbl">Total Views</div><div class="cc-stat-sub">+2.1M this month</div></div>
+          <div class="cc-stat"><div class="cc-stat-val">247</div><div class="cc-stat-lbl">Videos</div><div class="cc-stat-sub">18 Shorts</div></div>
+          <div class="cc-stat"><div class="cc-stat-val">₹84K</div><div class="cc-stat-lbl">Est. Revenue</div><div class="cc-stat-sub">This month</div></div>
+        </div>
+      </div>
+
+      <!-- Upload options -->
+      <div class="upload-section">
+        <div class="upload-title">🎬 Create New Content</div>
+        <div class="upload-grid">
+          <div class="upload-card long" onclick="showPage('upload-long')">
+            <div class="uc-glow" style="background:var(--amber)"></div>
+            <div style="position:relative;z-index:1">
+              <div class="uc-icon">🎥</div>
+              <div class="uc-title" style="color:var(--amber)">Long Video</div>
+              <div class="uc-desc">Upload videos longer than 60 seconds. Perfect for tutorials, vlogs, reviews, education, and entertainment.</div>
+              <div class="uc-features">
+                <span class="uc-tag">Up to 256GB</span><span class="uc-tag">4K Ultra HD</span>
+                <span class="uc-tag">Custom Thumbnail</span><span class="uc-tag">End Screens</span>
+                <span class="uc-tag">Cards</span><span class="uc-tag">Chapters</span>
+                <span class="uc-tag">Subtitles/CC</span><span class="uc-tag">Schedule</span>
+              </div>
+              <button class="uc-btn amber">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload Long Video
+              </button>
+            </div>
+          </div>
+          <div class="upload-card short" onclick="showPage('upload-short')">
+            <div class="uc-glow" style="background:var(--pink)"></div>
+            <div style="position:relative;z-index:1">
+              <div class="uc-icon">📱</div>
+              <div class="uc-title" style="color:var(--pink)">YouTube Short</div>
+              <div class="uc-desc">Create vertical short-form videos under 60 seconds. Reach millions with the Shorts feed algorithm.</div>
+              <div class="uc-features">
+                <span class="uc-tag">Under 60 sec</span><span class="uc-tag">9:16 Vertical</span>
+                <span class="uc-tag">Music Library</span><span class="uc-tag">Text Overlay</span>
+                <span class="uc-tag">Filters</span><span class="uc-tag">Speed Control</span>
+                <span class="uc-tag">Green Screen</span><span class="uc-tag">React/Remix</span>
+              </div>
+              <button class="uc-btn pink">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M15 10l4.553-2.069A1 1 0 0121 8.87V15.13"/><rect x="1" y="6" width="14" height="12" rx="2"/></svg>
+                Create a Short
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card" style="--stripe:var(--blue)"><div class="sc-lbl">Views (Last 28d)</div><div class="sc-val">2.1M</div><div class="sc-sub"><span class="trend-up">↑ 12.4%</span></div></div>
+        <div class="stat-card" style="--stripe:var(--green)"><div class="sc-lbl">Watch Time (hrs)</div><div class="sc-val">84K</div><div class="sc-sub"><span class="trend-up">↑ 8.2%</span></div></div>
+        <div class="stat-card" style="--stripe:var(--red)"><div class="sc-lbl">Subscribers</div><div class="sc-val">+8,420</div><div class="sc-sub"><span class="trend-up">↑ 18.1%</span></div></div>
+        <div class="stat-card" style="--stripe:var(--amber)"><div class="sc-lbl">Revenue</div><div class="sc-val">₹84K</div><div class="sc-sub"><span class="trend-up">↑ 6.8%</span></div></div>
+      </div>
+
+      <!-- Recent videos -->
+      <div class="panel">
+        <div class="ph"><div class="ph-t"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Recent Videos</div><button class="btn btn-ghost btn-sm" onclick="showPage('videos')">View All →</button></div>
+        <table class="video-table"><thead><tr><th>Video</th><th>Type</th><th>Views</th><th>Revenue</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="dashVideoTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ══ UPLOAD LONG ══ -->
+    <div class="page" id="page-upload-long">
+      <div class="studio-header">
+        <div><div class="sh-title">🎥 Upload Long Video</div><div class="sh-sub">Videos longer than 60 seconds · Up to 256GB · 4K supported</div></div>
+      </div>
+
+      <div class="upload-wizard">
+        <div class="wizard-steps">
+          <div class="ws active" id="ws1"><div class="ws-num">1</div>Upload File</div>
+          <div class="ws-arrow">›</div>
+          <div class="ws" id="ws2"><div class="ws-num">2</div>Details</div>
+          <div class="ws-arrow">›</div>
+          <div class="ws" id="ws3"><div class="ws-num">3</div>Thumbnail</div>
+          <div class="ws-arrow">›</div>
+          <div class="ws" id="ws4"><div class="ws-num">4</div>Visibility</div>
+          <div class="ws-arrow">›</div>
+          <div class="ws" id="ws5"><div class="ws-num">5</div>Publish</div>
+        </div>
+
+        <!-- Step 1: Upload -->
+        <div id="step1">
+          <div class="drop-zone" id="dropZone" onclick="triggerUpload()">
+            <span class="dz-icon">📂</span>
+            <div class="dz-title">Drag & Drop your video here</div>
+            <div class="dz-sub">Or click to browse files from your computer.<br/>Supported: MP4, MOV, AVI, WMV, FLV, MKV, WEBM, HEVC</div>
+            <button class="dz-btn" onclick="event.stopPropagation();triggerUpload()">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              SELECT VIDEO FILE
+            </button>
+            <div class="dz-formats">Max size: 256 GB · Supported formats: MP4, MOV, AVI, WMV, FLV, MKV, WEBM</div>
+          </div>
+
+          <div class="upload-progress" id="uploadProgress">
+            <div class="up-title">⬆️ Uploading Video</div>
+            <div class="up-file">
+              <div class="up-file-icon">🎬</div>
+              <div>
+                <div class="up-file-name" id="upFileName">video_tutorial.mp4</div>
+                <div class="up-file-size">1.84 GB · Processing at 720p, 1080p, 4K…</div>
+              </div>
+              <div class="up-pct" id="upPct">0%</div>
+            </div>
+            <div class="prog-bar"><div class="prog-fill" id="upProgFill" style="width:0%;background:var(--red)"></div></div>
+            <div style="font-size:.72rem;color:var(--text3);margin-top:4px" id="upStatus">Preparing upload…</div>
+          </div>
+
+          <input type="file" id="videoFileInput" accept="video/*" style="display:none" onchange="startUpload(this)"/>
+        </div>
+
+        <!-- Step 2: Details (shown after upload) -->
+        <div id="step2Details" style="display:none;margin-top:16px">
+          <div class="form-section">
+            <div class="form-section-title"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Video Details</div>
+            <div class="form-grid">
+              <div class="fg s2">
+                <label class="fl">Video Title *</label>
+                <input class="fi" id="videoTitle" placeholder="Write a catchy, SEO-friendly title (max 100 chars)" maxlength="100" oninput="updateCharCount(this,'titleCount',100)"/>
+                <div class="char-count"><span id="titleCount">0</span>/100</div>
+              </div>
+              <div class="fg s2">
+                <label class="fl">Description</label>
+                <textarea class="fta" id="videoDesc" placeholder="Describe your video. Include keywords, links, timestamps, and calls-to-action…" rows="5" style="min-height:120px" oninput="updateCharCount(this,'descCount',5000)"></textarea>
+                <div class="char-count"><span id="descCount">0</span>/5000</div>
+              </div>
+              <div class="fg">
+                <label class="fl">Category</label>
+                <select class="fs">
+                  <option>Science & Technology</option><option>Education</option><option>Entertainment</option>
+                  <option>Gaming</option><option>News & Politics</option><option>Howto & Style</option>
+                  <option>People & Blogs</option><option>Comedy</option><option>Music</option><option>Travel & Events</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label class="fl">Language</label>
+                <select class="fs"><option>Hindi</option><option>English</option><option>Hinglish</option><option>Tamil</option><option>Telugu</option></select>
+              </div>
+              <div class="fg s2">
+                <label class="fl">Tags (press Enter)</label>
+                <div class="tags-wrap" id="tagsWrap" onclick="document.getElementById('tagInput').focus()">
+                  <span class="tag-item">tutorial<button onclick="removeTag(this)">✕</button></span>
+                  <span class="tag-item">hindi<button onclick="removeTag(this)">✕</button></span>
+                  <span class="tag-item">technology<button onclick="removeTag(this)">✕</button></span>
+                  <input class="tags-input" id="tagInput" placeholder="Add tags…" onkeydown="addTag(event)"/>
+                </div>
+              </div>
+              <div class="fg">
+                <label class="fl">Video Chapters (Timestamps)</label>
+                <textarea class="fta" placeholder="0:00 Introduction&#10;1:30 Main Topic&#10;8:45 Demo&#10;15:00 Conclusion" style="min-height:80px;font-family:'JetBrains Mono',monospace;font-size:.78rem"></textarea>
+              </div>
+              <div class="fg">
+                <label class="fl">Target Audience</label>
+                <select class="fs"><option>Adults (18+)</option><option>General Audience</option><option>Not for Kids</option></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title"><svg viewBox="0 0 24 24"><path d="M9 14l2 2 4-4"/><rect x="5" y="2" width="14" height="20" rx="2"/></svg>SEO & Optimization</div>
+            <div class="form-grid">
+              <div class="fg"><label class="fl">Playlists</label><select class="fs"><option>None</option><option>Tech Tutorials</option><option>Beginner Series</option><option>+ New Playlist</option></select></div>
+              <div class="fg"><label class="fl">Series / Season</label><input class="fi" placeholder="e.g. Web Dev Series - Ep 12"/></div>
+              <div class="fg"><label class="fl">Hashtags</label><input class="fi" placeholder="#youtube #shorts #tutorial"/></div>
+              <div class="fg"><label class="fl">Location</label><input class="fi" placeholder="India, Mumbai, etc."/></div>
+            </div>
+          </div>
+
+          <!-- Advanced Options -->
+          <div class="form-section">
+            <div class="form-section-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4"/></svg>Advanced Settings</div>
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">Allow Comments</div><div class="toggle-sub">Viewers can comment on this video</div></div><label class="toggle-sw"><input type="checkbox" checked/><span class="sw-track"></span></label></div>
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">Allow Ratings (Likes)</div><div class="toggle-sub">Show like/dislike count</div></div><label class="toggle-sw"><input type="checkbox" checked/><span class="sw-track"></span></label></div>
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">Allow Embedding</div><div class="toggle-sub">Other sites can embed this video</div></div><label class="toggle-sw"><input type="checkbox" checked/><span class="sw-track"></span></label></div>
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">Notify Subscribers</div><div class="toggle-sub">Send upload notification to subscribers</div></div><label class="toggle-sw"><input type="checkbox" checked/><span class="sw-track"></span></label></div>
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">Age Restriction</div><div class="toggle-sub">Restrict to viewers 18 and older</div></div><label class="toggle-sw"><input type="checkbox"/><span class="sw-track"></span></label></div>
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">Contains Paid Promotion</div><div class="toggle-sub">Video includes paid product placement or sponsorship</div></div><label class="toggle-sw"><input type="checkbox"/><span class="sw-track"></span></label></div>
+          </div>
+
+          <!-- Subtitles -->
+          <div class="form-section">
+            <div class="form-section-title"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 12h10M7 16h5"/></svg>Subtitles & Captions</div>
+            <div class="form-grid">
+              <div class="fg"><label class="fl">Auto-Generate Captions</label><select class="fs"><option>Hindi (auto-detect)</option><option>English</option><option>Disabled</option></select></div>
+              <div class="fg"><label class="fl">Upload SRT / VTT File</label><input class="fi" type="file" accept=".srt,.vtt"/></div>
+            </div>
+          </div>
+
+          <!-- Thumbnail section (Step 3 inline) -->
+          <div class="form-section">
+            <div class="form-section-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Custom Thumbnail</div>
+            <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px">
+              <div style="flex:1">
+                <p style="font-size:.78rem;color:var(--text3);margin-bottom:12px">Upload a custom thumbnail or choose from auto-generated screenshots. Recommended: 1280×720px, max 2MB, JPG/PNG.</p>
+                <div style="display:flex;gap:8px;margin-bottom:12px">
+                  <button class="btn btn-ghost btn-sm" onclick="showToast('Opening thumbnail editor…','info')">🎨 Design Thumbnail</button>
+                  <button class="btn btn-ghost btn-sm" onclick="showToast('Uploading…','info')">📤 Upload Custom</button>
+                  <button class="btn btn-ghost btn-sm" onclick="showToast('Generating with AI…','info')">🤖 AI Generate</button>
+                </div>
+              </div>
+            </div>
+            <p style="font-size:.74rem;color:var(--text3);margin-bottom:8px">Auto-generated screenshots:</p>
+            <div class="thumbnail-grid">
+              <div class="thumb-opt selected" onclick="selectThumb(this)">
+                <div class="thumb-opt-inner" style="background:linear-gradient(135deg,#1a1a3a,#2a1a4a)">📱 Smart Tech Review 2025</div>
+                <div class="thumb-check">✓</div>
+              </div>
+              <div class="thumb-opt" onclick="selectThumb(this)">
+                <div class="thumb-opt-inner" style="background:linear-gradient(135deg,#1a2a1a,#0a1a0a)">🚀 Complete Tutorial</div>
+                <div class="thumb-check">✓</div>
+              </div>
+              <div class="thumb-opt" onclick="selectThumb(this)">
+                <div class="thumb-opt-inner" style="background:linear-gradient(135deg,#2a1a0a,#1a0a0a)">💡 FULL GUIDE 2025</div>
+                <div class="thumb-check">✓</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visibility -->
+          <div class="form-section">
+            <div class="form-section-title"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Visibility & Publishing</div>
+            <div class="vis-opts">
+              <div class="vis-opt selected" onclick="selectVis(this,'Public')"><div class="vis-opt-icon">🌍</div><div class="vis-opt-title">Public</div><div class="vis-opt-sub">Everyone can see</div></div>
+              <div class="vis-opt" onclick="selectVis(this,'Private')"><div class="vis-opt-icon">🔒</div><div class="vis-opt-title">Private</div><div class="vis-opt-sub">Only you</div></div>
+              <div class="vis-opt" onclick="selectVis(this,'Unlisted')"><div class="vis-opt-icon">🔗</div><div class="vis-opt-title">Unlisted</div><div class="vis-opt-sub">Link only</div></div>
+              <div class="vis-opt" onclick="selectVis(this,'Schedule')"><div class="vis-opt-icon">📅</div><div class="vis-opt-title">Schedule</div><div class="vis-opt-sub">Set date & time</div></div>
+            </div>
+            <div class="schedule-section" id="scheduleSection">
+              <div class="form-grid g3f" style="grid-template-columns:1fr 1fr 1fr;gap:10px">
+                <div class="fg"><label class="fl">Publish Date</label><input class="fi" type="date"/></div>
+                <div class="fg"><label class="fl">Publish Time</label><input class="fi" type="time"/></div>
+                <div class="fg"><label class="fl">Timezone</label><select class="fs"><option>IST (UTC+5:30)</option><option>UTC</option><option>PST</option></select></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
+            <button class="btn btn-ghost" onclick="showToast('Saved as draft ✓','info')">Save Draft</button>
+            <button class="btn btn-ghost" onclick="showToast('Previewing…','info')">👁 Preview</button>
+            <button class="btn btn-red" onclick="publishVideo()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>
+              Publish Video
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ UPLOAD SHORT ══ -->
+    <div class="page" id="page-upload-short">
+      <div class="studio-header">
+        <div><div class="sh-title">📱 Upload YouTube Short</div><div class="sh-sub">Vertical videos under 60 seconds · 9:16 ratio · Shorts feed</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:220px 1fr;gap:24px;max-width:860px">
+        <!-- Preview phone -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+          <div style="background:var(--card2);border:2px solid var(--border2);border-radius:24px;padding:12px;width:180px">
+            <div class="shorts-preview" style="width:156px;height:278px;border-radius:12px;margin:0;border:none;background:var(--card);cursor:pointer" onclick="triggerShortUpload()" id="shortPreview">
+              <div class="shorts-preview-inner" id="shortPreviewContent">
+                <div style="text-align:center;color:var(--text3)">
+                  <div style="font-size:2.5rem;margin-bottom:8px">📱</div>
+                  <div style="font-size:.72rem;font-weight:600">Tap to upload<br/>your Short</div>
+                  <div style="font-size:.62rem;margin-top:4px;color:var(--text4)">9:16 · Under 60s</div>
+                </div>
+              </div>
+              <div class="sp-label">Preview</div>
+            </div>
+          </div>
+          <input type="file" id="shortFileInput" accept="video/*" style="display:none" onchange="shortUploaded(this)"/>
+          <button class="btn btn-red btn-sm" onclick="triggerShortUpload()">Select Short</button>
+          <div style="font-size:.7rem;color:var(--text3);text-align:center">MP4, MOV · Max 60s<br/>Vertical 9:16 preferred</div>
+        </div>
+
+        <!-- Short details form -->
+        <div>
+          <div class="form-section">
+            <div class="form-section-title"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/></svg>Short Details</div>
+            <div class="form-grid">
+              <div class="fg s2">
+                <label class="fl">Title (shown in feed)</label>
+                <input class="fi" placeholder="Catchy short title · max 100 chars" maxlength="100" oninput="updateCharCount(this,'sTitleCount',100)"/>
+                <div class="char-count"><span id="sTitleCount">0</span>/100</div>
+              </div>
+              <div class="fg s2">
+                <label class="fl">Description</label>
+                <textarea class="fta" placeholder="Add description, hashtags, links…" style="min-height:80px" oninput="updateCharCount(this,'sDescCount',5000)"></textarea>
+                <div class="char-count"><span id="sDescCount">0</span>/5000</div>
+              </div>
+              <div class="fg s2">
+                <label class="fl">Hashtags (crucial for Shorts reach)</label>
+                <input class="fi" placeholder="#shorts #viral #trending #india #youtube"/>
+              </div>
+              <div class="fg"><label class="fl">Category</label><select class="fs"><option>Entertainment</option><option>Education</option><option>Comedy</option><option>Gaming</option><option>Music</option><option>Science & Tech</option></select></div>
+              <div class="fg"><label class="fl">Audio Track</label><select class="fs"><option>Original Audio</option><option>YouTube Music Library</option><option>Custom Audio File</option></select></div>
+            </div>
+          </div>
+
+          <!-- Shorts Tools -->
+          <div class="form-section">
+            <div class="form-section-title">🎨 Short Editor Tools</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
+              <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s" onclick="showToast('Opening text editor…','info')" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+                <div style="font-size:1.2rem;margin-bottom:4px">✍️</div><div style="font-size:.68rem;font-weight:700;color:var(--text2)">Text</div>
+              </div>
+              <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s" onclick="showToast('Opening stickers…','info')" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+                <div style="font-size:1.2rem;margin-bottom:4px">🎭</div><div style="font-size:.68rem;font-weight:700;color:var(--text2)">Stickers</div>
+              </div>
+              <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s" onclick="showToast('Opening filters…','info')" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+                <div style="font-size:1.2rem;margin-bottom:4px">🌈</div><div style="font-size:.68rem;font-weight:700;color:var(--text2)">Filter</div>
+              </div>
+              <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s" onclick="showToast('Opening trim tool…','info')" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+                <div style="font-size:1.2rem;margin-bottom:4px">✂️</div><div style="font-size:.68rem;font-weight:700;color:var(--text2)">Trim</div>
+              </div>
+              <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s" onclick="showToast('Opening speed control…','info')" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+                <div style="font-size:1.2rem;margin-bottom:4px">⚡</div><div style="font-size:.68rem;font-weight:700;color:var(--text2)">Speed</div>
+              </div>
+              <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s" onclick="showToast('Opening green screen…','info')" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+                <div style="font-size:1.2rem;margin-bottom:4px">🟢</div><div style="font-size:.68rem;font-weight:700;color:var(--text2)">Green Scr</div>
+              </div>
+              <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s" onclick="showToast('React/Remix feature…','info')" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+                <div style="font-size:1.2rem;margin-bottom:4px">🔄</div><div style="font-size:.68rem;font-weight:700;color:var(--text2)">React</div>
+              </div>
+              <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s" onclick="showToast('Adding captions…','info')" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+                <div style="font-size:1.2rem;margin-bottom:4px">💬</div><div style="font-size:.68rem;font-weight:700;color:var(--text2)">Captions</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shorts settings -->
+          <div class="form-section">
+            <div class="form-section-title"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Visibility & Settings</div>
+            <div class="vis-opts" style="margin-bottom:12px">
+              <div class="vis-opt selected" onclick="selectVis(this,'Public')"><div class="vis-opt-icon">🌍</div><div class="vis-opt-title">Public</div></div>
+              <div class="vis-opt" onclick="selectVis(this,'Private')"><div class="vis-opt-icon">🔒</div><div class="vis-opt-title">Private</div></div>
+              <div class="vis-opt" onclick="selectVis(this,'Unlisted')"><div class="vis-opt-icon">🔗</div><div class="vis-opt-title">Unlisted</div></div>
+              <div class="vis-opt" onclick="selectVis(this,'Schedule')"><div class="vis-opt-icon">📅</div><div class="vis-opt-title">Schedule</div></div>
+            </div>
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">Allow Comments on Short</div></div><label class="toggle-sw"><input type="checkbox" checked/><span class="sw-track"></span></label></div>
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">Allow Remixing (React/Duet)</div></div><label class="toggle-sw"><input type="checkbox" checked/><span class="sw-track"></span></label></div>
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">Notify Subscribers</div></div><label class="toggle-sw"><input type="checkbox" checked/><span class="sw-track"></span></label></div>
+          </div>
+
+          <div style="display:flex;gap:10px;justify-content:flex-end">
+            <button class="btn btn-ghost" onclick="showToast('Short saved as draft ✓','info')">Save Draft</button>
+            <button class="btn btn-red" style="background:var(--pink)" onclick="showToast('Short published! ✓ Now live in Shorts feed','ok')">
+              📱 Publish Short
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ VIDEOS ══ -->
+    <div class="page" id="page-videos">
+      <div class="studio-header">
+        <div><div class="sh-title">Content Manager</div><div class="sh-sub">All your videos, shorts, and live streams</div></div>
+        <button class="btn btn-red btn-sm" onclick="showPage('upload-long')">+ Upload Video</button>
+      </div>
+      <div class="video-list-header">
+        <div class="filter-tabs">
+          <button class="ftab active" onclick="filterVideos(this,'all')">All (24)</button>
+          <button class="ftab" onclick="filterVideos(this,'long')">🎥 Long (18)</button>
+          <button class="ftab" onclick="filterVideos(this,'short')">📱 Shorts (4)</button>
+          <button class="ftab" onclick="filterVideos(this,'live')">🔴 Live (2)</button>
+          <button class="ftab" onclick="filterVideos(this,'draft')">📝 Drafts (3)</button>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <input type="text" placeholder="Search videos…" style="padding:7px 12px;background:var(--card);border:1px solid var(--border);border-radius:20px;color:var(--text);font-size:.78rem;outline:none;width:180px"/>
+        </div>
+      </div>
+      <div class="panel">
+        <table class="video-table">
+          <thead><tr><th>Video</th><th>Type</th><th>Views</th><th>Likes</th><th>Revenue</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="videoTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ ANALYTICS ══ -->
+    <div class="page" id="page-analytics">
+      <div class="studio-header">
+        <div><div class="sh-title">Analytics</div><div class="sh-sub">Deep insights into your channel performance</div></div>
+      </div>
+      <div class="analytics-period">
+        <button class="period-btn" onclick="setPeriod(this)">Last 7 days</button>
+        <button class="period-btn active" onclick="setPeriod(this)">Last 28 days</button>
+        <button class="period-btn" onclick="setPeriod(this)">Last 90 days</button>
+        <button class="period-btn" onclick="setPeriod(this)">Last 365 days</button>
+        <button class="period-btn" onclick="setPeriod(this)">Custom range</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card" style="--stripe:var(--blue)"><div class="sc-lbl">Views</div><div class="sc-val">2.1M</div><div class="sc-sub"><span class="trend-up">↑12.4%</span></div></div>
+        <div class="stat-card" style="--stripe:var(--green)"><div class="sc-lbl">Watch Time</div><div class="sc-val">84K hrs</div><div class="sc-sub"><span class="trend-up">↑8.2%</span></div></div>
+        <div class="stat-card" style="--stripe:var(--red)"><div class="sc-lbl">New Subscribers</div><div class="sc-val">+8,420</div><div class="sc-sub"><span class="trend-up">↑18.1%</span></div></div>
+        <div class="stat-card" style="--stripe:var(--amber)"><div class="sc-lbl">Revenue</div><div class="sc-val">₹84K</div><div class="sc-sub"><span class="trend-up">↑6.8%</span></div></div>
+      </div>
+      <div class="g2">
+        <div class="chart-area">
+          <div class="chart-title">Views Over Time</div>
+          <div class="chart-sub">Daily views for the last 28 days</div>
+          <div style="position:relative;height:120px;overflow:hidden">
+            <div class="line-chart-area"></div>
+            <div style="height:120px;border-left:1px solid var(--border);border-bottom:1px solid var(--border);position:relative">
+              <div style="position:absolute;bottom:0;left:0;right:0;display:flex;align-items:flex-end;gap:3px;height:100%;padding:4px">
+                <div id="viewsChart" style="display:flex;align-items:flex-end;gap:3px;width:100%;height:100%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-area">
+          <div class="chart-title">Subscriber Growth</div>
+          <div class="chart-sub">New subscribers per week</div>
+          <div class="bar-chart-wrap" id="subChart"></div>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="panel">
+          <div class="ph"><div class="ph-t">🏆 Top Performing Videos</div></div>
+          <div class="pb" id="topVideos"></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="ph-t">📊 Audience Demographics</div></div>
+          <div class="pb" id="demographics"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ COMMENTS ══ -->
+    <div class="page" id="page-comments">
+      <div class="studio-header">
+        <div><div class="sh-title">Comments</div><div class="sh-sub">Manage and respond to all your video comments</div></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card" style="--stripe:var(--red)"><div class="sc-lbl">Total Comments</div><div class="sc-val">12,840</div></div>
+        <div class="stat-card" style="--stripe:var(--amber)"><div class="sc-lbl">Pending Review</div><div class="sc-val">8</div></div>
+        <div class="stat-card" style="--stripe:var(--blue)"><div class="sc-lbl">Replied</div><div class="sc-val">2,140</div></div>
+        <div class="stat-card" style="--stripe:var(--green)"><div class="sc-lbl">Liked by You</div><div class="sc-val">842</div></div>
+      </div>
+      <div class="filter-tabs mb16">
+        <button class="ftab active">All Comments</button>
+        <button class="ftab">Unread (8)</button>
+        <button class="ftab">Pinned</button>
+        <button class="ftab">Held for Review</button>
+      </div>
+      <div class="panel">
+        <div class="pb" id="commentsList"></div>
+      </div>
+    </div>
+
+    <!-- ══ LIVE ══ -->
+    <div class="page" id="page-live">
+      <div class="studio-header">
+        <div><div class="sh-title">Live Streaming</div><div class="sh-sub">Go live and connect with your audience in real-time</div></div>
+      </div>
+      <div class="live-setup-card">
+        <div class="live-dot">🔴 LIVE READY</div>
+        <div style="font-family:'Clash Display',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:8px">Ready to Go Live?</div>
+        <p style="font-size:.82rem;color:var(--text2);margin-bottom:16px">Set up your stream below. Once configured, click "Go Live" to start broadcasting.</p>
+        <div class="form-grid" style="margin-bottom:14px">
+          <div class="fg"><label class="fl">Stream Title</label><input class="fi" placeholder="What are you streaming today?"/></div>
+          <div class="fg"><label class="fl">Category</label><select class="fs"><option>Gaming</option><option>Just Chatting</option><option>Music</option><option>Science & Tech</option><option>Education</option></select></div>
+          <div class="fg"><label class="fl">Visibility</label><select class="fs"><option>Public</option><option>Unlisted</option><option>Private</option></select></div>
+          <div class="fg"><label class="fl">DVR (Rewind)</label><select class="fs"><option>Enabled (4 hrs)</option><option>Disabled</option></select></div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-red" onclick="showToast('🔴 Going live now!','ok')">🔴 Go Live Now</button>
+          <button class="btn btn-ghost" onclick="showToast('Stream scheduled ✓','info')">📅 Schedule Stream</button>
+          <button class="btn btn-ghost" onclick="showToast('Opening stream manager…','info')">⚙️ Stream Manager</button>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="panel">
+          <div class="ph"><div class="ph-t">Stream Key & Settings</div></div>
+          <div class="pb">
+            <div class="fg" style="margin-bottom:12px"><label class="fl">Stream Key (Keep Secret!)</label><div style="display:flex;gap:8px"><input class="fi" type="password" value="xxxx-xxxx-xxxx-xxxx"/><button class="btn btn-ghost btn-sm" onclick="showToast('Copied!','ok')">Copy</button></div></div>
+            <div class="fg" style="margin-bottom:12px"><label class="fl">Stream URL</label><input class="fi" value="rtmp://a.rtmp.youtube.com/live2" readonly/></div>
+            <div class="fg"><label class="fl">Encoder Recommendation</label>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+                <span style="padding:3px 10px;background:var(--card2);border:1px solid var(--border);border-radius:20px;font-size:.72rem;color:var(--text2)">OBS Studio</span>
+                <span style="padding:3px 10px;background:var(--card2);border:1px solid var(--border);border-radius:20px;font-size:.72rem;color:var(--text2)">Streamlabs</span>
+                <span style="padding:3px 10px;background:var(--card2);border:1px solid var(--border);border-radius:20px;font-size:.72rem;color:var(--text2)">XSplit</span>
+                <span style="padding:3px 10px;background:var(--card2);border:1px solid var(--border);border-radius:20px;font-size:.72rem;color:var(--text2)">Wirecast</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="ph-t">Recent Live Streams</div></div>
+          <div class="pb">
+            ${['Q&A Session with Subscribers','Live Coding: Build a Full Stack App','Product Review Unboxing Live'].map((s,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="width:60px;height:34px;border-radius:6px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">📺</div><div style="flex:1"><div style="font-size:.8rem;font-weight:600;color:var(--text)">${s}</div><div style="font-size:.68rem;color:var(--text3)">${['2.1K', '4.8K','1.4K'][i]} viewers peak</div></div><span class="vstatus vs-pub">archived</span></div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PLAYLISTS ══ -->
+    <div class="page" id="page-playlists">
+      <div class="studio-header">
+        <div><div class="sh-title">Playlists</div></div>
+        <button class="btn btn-red btn-sm" onclick="openModal('playlistModal')">+ New Playlist</button>
+      </div>
+      <div class="g3" id="playlistGrid"></div>
+    </div>
+
+    <!-- ══ MONETIZATION ══ -->
+    <div class="page" id="page-monetize">
+      <div class="studio-header">
+        <div><div class="sh-title">💰 Monetization</div><div class="sh-sub">Earn revenue from your content in multiple ways</div></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card" style="--stripe:var(--green)"><div class="sc-lbl">Estimated Revenue</div><div class="sc-val">₹84K</div><div class="sc-sub">This month</div></div>
+        <div class="stat-card" style="--stripe:var(--amber)"><div class="sc-lbl">RPM</div><div class="sc-val">₹42.80</div><div class="sc-sub">Per 1000 views</div></div>
+        <div class="stat-card" style="--stripe:var(--blue)"><div class="sc-lbl">CPM</div><div class="sc-val">₹84.20</div></div>
+        <div class="stat-card" style="--stripe:var(--red)"><div class="sc-lbl">YPP Status</div><div class="sc-val" style="font-size:1rem;color:var(--green)">Active ✓</div></div>
+      </div>
+      <div id="monetizeList"></div>
+    </div>
+
+    <!-- ══ SUBTITLES ══ -->
+    <div class="page" id="page-subtitles">
+      <div class="studio-header">
+        <div><div class="sh-title">Subtitles & Captions</div></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="ph-t">Video Subtitles</div><button class="btn btn-red btn-sm" onclick="showToast('Adding subtitles…','info')">+ Add Subtitles</button></div>
+        <table class="video-table"><thead><tr><th>Video</th><th>Language</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="subtitleTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ══ END SCREEN ══ -->
+    <div class="page" id="page-endscreen">
+      <div class="studio-header">
+        <div><div class="sh-title">End Screen & Cards</div><div class="sh-sub">Add elements that appear in the last 5-20 seconds of your video</div></div>
+      </div>
+      <div class="g2">
+        <div>
+          <div class="panel mb16">
+            <div class="ph"><div class="ph-t">End Screen Preview</div></div>
+            <div class="pb">
+              <div class="end-screen-preview">
+                <div class="end-screen-bg"></div>
+                <div class="end-card" style="left:15%;top:20%"><div class="end-card-icon">▶️</div>Latest Video</div>
+                <div class="end-card" style="right:15%;top:20%"><div class="end-card-icon">📺</div>Best Video</div>
+                <div class="end-card" style="left:40%;bottom:20%"><div class="end-card-icon">👤</div>Subscribe!</div>
+              </div>
+              <div style="font-size:.74rem;color:var(--text3)">Click and drag end cards to reposition. Appears in last 5-20 seconds of video.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-ghost btn-sm" onclick="showToast('Adding video element…','info')">▶️ Add Video</button>
+            <button class="btn btn-ghost btn-sm" onclick="showToast('Adding playlist…','info')">📺 Add Playlist</button>
+            <button class="btn btn-ghost btn-sm" onclick="showToast('Adding subscribe button…','info')">👤 Add Subscribe</button>
+            <button class="btn btn-ghost btn-sm" onclick="showToast('Adding channel…','info')">📢 Add Channel</button>
+            <button class="btn btn-ghost btn-sm" onclick="showToast('Adding link…','info')">🔗 Add Link</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="ph-t">Cards Manager</div></div>
+          <div class="pb">
+            <p style="font-size:.8rem;color:var(--text3);margin-bottom:14px">Cards appear as clickable elements during video playback to drive engagement.</p>
+            <div style="display:flex;flex-direction:column;gap:8px" id="cardsList"></div>
+            <button class="btn btn-ghost btn-sm" style="margin-top:12px;width:100%;justify-content:center" onclick="showToast('Adding card…','info')">+ Add Card</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══ MODALS ══ -->
+<div class="modal-bg" id="quickCreate">
+  <div class="modal md">
+    <div class="mh"><div class="mh-title">Create New Content</div><button class="mx" onclick="closeModal('quickCreate')">✕</button></div>
+    <div class="mb-body">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;display:flex;gap:14px;transition:all .15s" onclick="closeModal('quickCreate');showPage('upload-long');showToast('Opening Long Video Upload…','info')" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.5rem;flex-shrink:0">🎥</div>
+          <div><div style="font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:2px">Upload Long Video</div><div style="font-size:.75rem;color:var(--text3)">Videos over 60 seconds · up to 256GB · 4K, HD supported</div></div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;display:flex;gap:14px;transition:all .15s" onclick="closeModal('quickCreate');showPage('upload-short')" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.5rem;flex-shrink:0">📱</div>
+          <div><div style="font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:2px">Create YouTube Short</div><div style="font-size:.75rem;color:var(--text3)">Vertical videos under 60 seconds · 9:16 ratio · Shorts feed</div></div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;display:flex;gap:14px;transition:all .15s" onclick="closeModal('quickCreate');showPage('live')" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.5rem;flex-shrink:0">🔴</div>
+          <div><div style="font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:2px">Go Live</div><div style="font-size:.75rem;color:var(--text3)">Stream live to your audience in real-time</div></div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;display:flex;gap:14px;transition:all .15s" onclick="closeModal('quickCreate');showToast('Opening post creator…','info')" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.5rem;flex-shrink:0">📝</div>
+          <div><div style="font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:2px">Create Post</div><div style="font-size:.75rem;color:var(--text3)">Share text, images, polls with your community</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="playlistModal">
+  <div class="modal sm">
+    <div class="mh"><div class="mh-title">New Playlist</div><button class="mx" onclick="closeModal('playlistModal')">✕</button></div>
+    <div class="mb-body">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="fg"><label class="fl">Playlist Title</label><input class="fi" placeholder="e.g. Complete React Tutorial Series"/></div>
+        <div class="fg"><label class="fl">Description</label><textarea class="fta" placeholder="Describe your playlist…" style="min-height:70px"></textarea></div>
+        <div class="fg"><label class="fl">Visibility</label><select class="fs"><option>Public</option><option>Unlisted</option><option>Private</option></select></div>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-ghost" onclick="closeModal('playlistModal')">Cancel</button>
+      <button class="btn btn-red" onclick="showToast('Playlist created ✓','ok');closeModal('playlistModal')">Create</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+<input type="file" id="hiddenFile" accept="video/*" style="display:none"/>
+
+<script>
+/* ══════════════════════════════════════
+   DATA
+══════════════════════════════════════ */
+const VIDEOS=[
+  {bg:'linear-gradient(135deg,#1a1a3a,#2d1b4e)',emoji:'📱',title:'Top 10 Tech Gadgets 2025 – Full Review',type:'long',views:'284K',likes:'18K',rev:'₹12.4K',date:'Jan 20',status:'pub'},
+  {bg:'linear-gradient(135deg,#1a3a1a,#0a2a1a)',emoji:'💻',title:'React.js Full Course in Hindi 2025',type:'long',views:'1.2M',likes:'84K',rev:'₹54.2K',date:'Jan 15',status:'pub'},
+  {bg:'linear-gradient(135deg,#3a1a1a,#2a0a0a)',emoji:'🤖',title:'#shorts AI kya hai? 60 seconds me samjho',type:'short',views:'4.8M',likes:'240K',rev:'₹8.2K',date:'Jan 12',status:'pub'},
+  {bg:'linear-gradient(135deg,#1a2a3a,#0a1a2a)',emoji:'☁️',title:'AWS vs Azure vs GCP – Best Cloud 2025',type:'long',views:'142K',likes:'9.2K',rev:'₹6.8K',date:'Jan 10',status:'pub'},
+  {bg:'linear-gradient(135deg,#2a2a1a,#1a1a0a)',emoji:'🐍',title:'Python 100 Days Challenge – Day 1',type:'long',views:'420K',likes:'28K',rev:'₹18.4K',date:'Jan 5',status:'pub'},
+  {bg:'linear-gradient(135deg,#3a1a2a,#2a0a1a)',emoji:'📈',title:'#shorts Stock Market For Beginners',type:'short',views:'2.1M',likes:'108K',rev:'₹4.8K',date:'Jan 3',status:'pub'},
+  {bg:'linear-gradient(135deg,#1a1a2a,#0a0a1a)',emoji:'🔴',title:'LIVE: Q&A – Your Questions Answered',type:'live',views:'18.4K',likes:'2.4K',rev:'₹2.2K',date:'Dec 28',status:'pub'},
+  {bg:'linear-gradient(135deg,#2a1a1a,#1a0a0a)',emoji:'🎮',title:'Gaming Setup Tour 2025 – Budget ₹50K',type:'long',views:'0',likes:'0',rev:'—',date:'Jan 22',status:'dft'},
+];
+const COMMENTS=[
+  {name:'Rahul Kumar',color:'#e74c3c',av:'RK',time:'2 hours ago',video:'React Full Course',text:'Bhai ye course bahut accha hai! Mujhe job mil gayi iske baad 🙏 Thank you so much!',likes:284,replies:12,pin:true},
+  {name:'Priya Sharma',color:'#9b59b6',av:'PS',time:'4 hours ago',video:'Top 10 Gadgets',text:'Sir please make a video on budget laptops under 40k. Bahut logo ko help hogi.',likes:142,replies:5,pin:false},
+  {name:'Tech Learner',color:'#3498db',av:'TL',time:'6 hours ago',video:'Python 100 Days',text:'Day 1 se start kiya hun. Abhi tak ka best course dekha hai. Keep it up!',likes:89,replies:3,pin:false},
+  {name:'Arjun Singh',color:'#27ae60',av:'AS',time:'1 day ago',video:'AWS vs Azure',text:'Aapki explanation style ekdum unique hai. Main 3 mahine se follow kar raha hun!',likes:67,replies:2,pin:false},
+  {name:'NewUser2025',color:'#e67e22',av:'NU',time:'1 day ago',video:'AI Shorts',text:'😂😂😂 itne kam time mein AI samjha diya! Subscribe kar liya',likes:420,replies:18,pin:false},
+];
+const PLAYLISTS=[
+  {emoji:'⚛️',name:'React.js Complete Series',videos:24,views:'2.4M',color:'#61dafb'},
+  {emoji:'🐍',name:'Python 100 Days Challenge',videos:18,views:'1.8M',color:'#ffd43b'},
+  {emoji:'☁️',name:'Cloud Computing Tutorials',videos:12,views:'840K',color:'#ff9900'},
+  {emoji:'📱',name:'Best Shorts Compilation',videos:18,views:'12M',color:'#ff4e8b'},
+  {emoji:'💻',name:'Web Dev Full Stack Course',videos:32,views:'4.2M',color:'#764abc'},
+  {emoji:'🔴',name:'Live Stream Recordings',videos:8,views:'180K',color:'#ff0000'},
+];
+const MONETIZE=[
+  {emoji:'📺',name:'Ad Revenue (YPP)',desc:'Earn from ads shown on your long videos and Shorts',earn:'₹68,400/mo',sub:'CPM ₹84.20',bg:'var(--amber-s)'},
+  {emoji:'🎁',name:'Super Thanks / Super Chat',desc:'One-time donations from viewers during live and on videos',earn:'₹8,400/mo',sub:'Live streams',bg:'var(--red-s)'},
+  {emoji:'👤',name:'Channel Memberships',desc:'Recurring monthly income from loyal subscribers',earn:'₹4,800/mo',sub:'142 members',bg:'var(--blue-s)'},
+  {emoji:'🛍️',name:'Merchandise Shelf',desc:'Sell branded merch directly from your channel page',earn:'₹2,400/mo',sub:'12 products',bg:'var(--green-s)'},
+  {emoji:'🤝',name:'Brand Sponsorships',desc:'Paid promotions and brand deals in your videos',earn:'₹40,000/mo',sub:'3 active deals',bg:'var(--purple-s)'},
+];
+const SUBTITLES_DATA=[
+  {video:'React Full Course',lang:'Hindi',type:'Auto-generated',status:'pub'},
+  {video:'Top 10 Gadgets',lang:'English',type:'Manual (.srt)',status:'pub'},
+  {video:'Python 100 Days',lang:'Hindi',type:'Auto-generated',status:'pub'},
+  {video:'AWS vs Azure',lang:'Hindi',type:'Pending',status:'dft'},
+];
+
+/* ══════════════════════════════════════
+   UTILS
+══════════════════════════════════════ */
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function showToast(msg,type=''){
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;el.textContent=msg;
+  $('toasts').appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .25s';setTimeout(()=>el.remove(),250);},2800);
+}
+function openModal(id){$(id)?.classList.add('open')}
+function closeModal(id){$(id)?.classList.remove('open')}
+document.addEventListener('click',e=>{if(e.target.classList.contains('modal-bg'))e.target.classList.remove('open')});
+function updateCharCount(el,countId,max){const c=$(countId);if(c){c.textContent=el.value.length;c.style.color=el.value.length>max*0.9?'var(--red)':'var(--text3)'}}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  buildDashVideos();buildVideoTable();buildComments();buildPlaylists();buildMonetize();buildAnalytics();buildSubtitles();buildEndCards();
+});
+
+/* ══════════════════════════════════════
+   BUILDERS
+══════════════════════════════════════ */
+function buildDashVideos(){
+  const tb=$('dashVideoTable');if(!tb)return;
+  VIDEOS.slice(0,5).forEach(v=>{
+    tb.innerHTML+=`<tr>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <div class="vt-thumb-inner" style="background:${v.bg}">${v.emoji}</div>
+        <div><div class="vt-title">${esc(v.title)}</div><div class="vt-time">${v.date}</div></div>
+      </div></td>
+      <td><span class="vtype ${v.type}">${v.type==='short'?'#Short':v.type==='live'?'🔴 Live':'🎥 Long'}</span></td>
+      <td style="font-family:'JetBrains Mono';font-weight:700">${v.views}</td>
+      <td style="color:var(--green);font-weight:700">${v.rev}</td>
+      <td><span class="vstatus ${v.status==='pub'?'vs-pub':v.status==='dft'?'vs-dft':'vs-pri'}">${v.status==='pub'?'Public':v.status==='dft'?'Draft':'Private'}</span></td>
+      <td><div class="vt-actions">
+        <button class="va-btn" onclick="showToast('Opening editor…','info')"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/></svg>Edit</button>
+        <button class="va-btn" onclick="showToast('Opening analytics…','info')">📊</button>
+      </div></td>
+    </tr>`;
+  });
+}
+
+function buildVideoTable(){
+  const tb=$('videoTable');if(!tb)return;
+  VIDEOS.forEach(v=>{
+    tb.innerHTML+=`<tr>
+      <td><div style="display:flex;align-items:center;gap:12px">
+        <div class="vt-thumb-inner" style="background:${v.bg};border-radius:8px">${v.emoji}</div>
+        <div><div class="vt-title">${esc(v.title)}</div><div class="vt-time">${v.date}</div></div>
+      </div></td>
+      <td><span class="vtype ${v.type}">${v.type==='short'?'#Short':v.type==='live'?'🔴 Live':'🎥 Long'}</span></td>
+      <td style="font-family:'JetBrains Mono';font-weight:700;color:var(--text)">${v.views}</td>
+      <td style="font-family:'JetBrains Mono'">${v.likes||'—'}</td>
+      <td style="color:var(--green);font-weight:700">${v.rev}</td>
+      <td class="mono" style="font-size:.72rem">${v.date}</td>
+      <td><span class="vstatus ${v.status==='pub'?'vs-pub':v.status==='dft'?'vs-dft':'vs-pri'}">${v.status==='pub'?'Public':v.status==='dft'?'Draft':'Private'}</span></td>
+      <td><div class="vt-actions">
+        <button class="va-btn" onclick="showToast('Opening editor…','info')"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/></svg>Edit</button>
+        <button class="va-btn" onclick="showToast('📊 Opening analytics…','info')">📊</button>
+        <button class="va-btn red" onclick="showToast('Video deleted','err')">🗑</button>
+      </div></td>
+    </tr>`;
+  });
+}
+
+function buildComments(){
+  const cl=$('commentsList');if(!cl)return;
+  COMMENTS.forEach(c=>{
+    cl.innerHTML+=`<div class="comment-row">
+      <div class="c-avatar" style="background:${c.color}">${c.av}</div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="c-name">${esc(c.name)}</div>
+          <div class="c-time">${c.time}</div>
+          ${c.pin?'<span style="font-size:.62rem;padding:1px 6px;border-radius:10px;background:var(--amber-s);color:var(--amber);font-weight:700">PINNED</span>':''}
+          <span style="font-size:.62rem;color:var(--text3)">on: ${c.video}</span>
+        </div>
+        <div class="c-text">${esc(c.text)}</div>
+        <div class="c-actions">
+          <div class="c-act"><svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>${c.likes} Likes</div>
+          <div class="c-act" onclick="showToast('Opening reply…','info')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Reply (${c.replies})</div>
+          ${!c.pin?`<div class="c-act" onclick="showToast('Comment pinned ✓','ok')">📌 Pin</div>`:''}
+          <div class="c-act" onclick="showToast('Comment removed','err')" style="color:var(--text4)">Remove</div>
+          <div class="c-act" onclick="showToast('User reported','err')" style="color:var(--text4)">Report</div>
+        </div>
+      </div>
+    </div>`;
+  });
+}
+
+function buildPlaylists(){
+  const pg=$('playlistGrid');if(!pg)return;
+  PLAYLISTS.forEach(p=>{
+    pg.innerHTML+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="height:100px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:2.5rem;position:relative">
+        ${p.emoji}
+        <div style="position:absolute;bottom:6px;right:8px;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(0,0,0,.7);color:white">${p.videos} videos</div>
+      </div>
+      <div style="padding:12px 14px">
+        <div style="font-size:.86rem;font-weight:700;color:var(--text);margin-bottom:3px">${p.name}</div>
+        <div style="font-size:.72rem;color:var(--text3)">👁 ${p.views} views</div>
+      </div>
+    </div>`;
+  });
+}
+
+function buildMonetize(){
+  const ml=$('monetizeList');if(!ml)return;
+  MONETIZE.forEach(m=>{
+    ml.innerHTML+=`<div class="monetize-card">
+      <div class="mc-icon" style="background:${m.bg}">${m.emoji}</div>
+      <div><div class="mc-title">${m.name}</div><div class="mc-desc">${m.desc}</div></div>
+      <div class="mc-right"><div class="mc-earn">${m.earn}</div><div class="mc-sub">${m.sub}</div></div>
+      <button class="va-btn" onclick="showToast('Opening ${m.name} settings…','info')" style="flex-shrink:0">Manage</button>
+    </div>`;
+  });
+}
+
+function buildAnalytics(){
+  const vc=$('viewsChart');
+  if(vc){
+    const vals=[40,55,48,62,58,72,68,80,74,88,82,94,90,84,96,78,86,92,88,74,82,90,84,96,92,88,86,94];
+    const max=Math.max(...vals);
+    vals.forEach((v,i)=>{
+      const h=Math.round((v/max)*110);
+      vc.innerHTML+=`<div style="flex:1;background:rgba(255,0,0,.15);border-radius:2px 2px 0 0;height:${h}px;min-height:2px"></div>`;
+    });
+  }
+  const sc=$('subChart');
+  if(sc){
+    const weeks=['W1','W2','W3','W4'];const vals=[1840,2100,2400,2080];const max=Math.max(...vals);
+    weeks.forEach((w,i)=>{
+      const h=Math.round((vals[i]/max)*90);
+      sc.innerHTML+=`<div class="bc-col-w"><div class="bc-bar" style="height:${h}px;background:linear-gradient(to top,var(--red),rgba(255,0,0,.5))"></div><div class="bc-lbl">${w}</div></div>`;
+    });
+  }
+  const tv=$('topVideos');
+  if(tv){
+    VIDEOS.filter(v=>v.status==='pub').slice(0,4).forEach((v,i)=>{
+      tv.innerHTML+=`<div class="top-video-row">
+        <div class="tv-rank">${i+1}</div>
+        <div class="tv-thumb" style="background:${v.bg};border-radius:6px">${v.emoji}</div>
+        <div style="flex:1"><div class="tv-title">${v.title.slice(0,38)}…</div><div class="tv-stats"><span class="vtype ${v.type}" style="font-size:.6rem">${v.type}</span></div></div>
+        <div class="tv-views">${v.views}</div>
+      </div>`;
+    });
+  }
+  const dg=$('demographics');
+  if(dg){
+    const ages=[['18–24','42%','var(--red)'],['25–34','31%','var(--amber)'],['35–44','16%','var(--blue)'],['45+','11%','var(--green)']];
+    dg.innerHTML='<div style="margin-bottom:14px"><div style="font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:8px">Age Groups</div>';
+    ages.forEach(([a,p,c])=>{
+      dg.innerHTML+=`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:.76rem;margin-bottom:3px"><span style="color:var(--text2)">${a}</span><span style="font-family:'JetBrains Mono';font-weight:700;color:${c}">${p}</span></div><div class="prog-bar"><div class="prog-fill" style="width:${p};background:${c}"></div></div></div>`;
+    });
+    dg.innerHTML+=`</div><div style="font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:8px">Gender Split</div>
+    <div style="display:flex;gap:10px">
+      <div style="flex:1;background:var(--surface);border-radius:9px;padding:10px;text-align:center"><div style="font-size:1.1rem;margin-bottom:3px">👨</div><div style="font-size:1rem;font-weight:800;color:var(--blue);font-family:'JetBrains Mono'">64%</div><div style="font-size:.65rem;color:var(--text3)">Male</div></div>
+      <div style="flex:1;background:var(--surface);border-radius:9px;padding:10px;text-align:center"><div style="font-size:1.1rem;margin-bottom:3px">👩</div><div style="font-size:1rem;font-weight:800;color:var(--pink);font-family:'JetBrains Mono'">36%</div><div style="font-size:.65rem;color:var(--text3)">Female</div></div>
+    </div>`;
+  }
+}
+
+function buildSubtitles(){
+  const tb=$('subtitleTable');if(!tb)return;
+  SUBTITLES_DATA.forEach(r=>{
+    tb.innerHTML+=`<tr>
+      <td>${r.video}</td>
+      <td>${r.lang}</td>
+      <td><span class="vstatus ${r.type.includes('Auto')?'vs-sch':'vs-pub'}">${r.type}</span></td>
+      <td><span class="vstatus ${r.status==='pub'?'vs-pub':'vs-dft'}">${r.status==='pub'?'Published':'Draft'}</span></td>
+      <td><div class="vt-actions">
+        <button class="va-btn" onclick="showToast('Editing subtitles…','info')">Edit</button>
+        <button class="va-btn" onclick="showToast('Downloaded .srt','ok')">⬇️</button>
+        <button class="va-btn red" onclick="showToast('Removed','err')">✕</button>
+      </div></td>
+    </tr>`;
+  });
+}
+
+function buildEndCards(){
+  const cl=$('cardsList');if(!cl)return;
+  ['Video Card – Latest Upload','Playlist Card – React Series','Subscribe Button Card'].forEach((c,i)=>{
+    cl.innerHTML+=`<div style="display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px">
+      <div style="font-size:1rem;flex-shrink:0">${['▶️','📺','👤'][i]}</div>
+      <div style="flex:1"><div style="font-size:.8rem;font-weight:600;color:var(--text)">${c}</div><div style="font-size:.68rem;color:var(--text3)">Appears at ${['0:05','0:10','0:15'][i]}</div></div>
+      <button class="va-btn" onclick="showToast('Editing card…','info')">Edit</button>
+      <button class="va-btn red" onclick="showToast('Card removed','err')">✕</button>
+    </div>`;
+  });
+}
+
+/* ══════════════════════════════════════
+   VIDEO UPLOAD LOGIC
+══════════════════════════════════════ */
+function triggerUpload(){$('videoFileInput').click()}
+function triggerShortUpload(){$('shortFileInput').click()}
+
+function startUpload(input){
+  if(!input.files[0])return;
+  const file=input.files[0];
+  const prog=$('uploadProgress');
+  prog.classList.add('show');
+  $('upFileName').textContent=file.name;
+  $('dropZone').style.display='none';
+  let p=0;
+  const msgs=['Preparing upload…','Uploading to YouTube servers…','Processing video…','Generating 720p…','Generating 1080p…','Generating 4K…','Almost done…','Upload complete! ✓'];
+  const interval=setInterval(()=>{
+    p+=Math.random()*8+2;
+    if(p>=100){p=100;clearInterval(interval);setTimeout(()=>{
+      $('step2Details').style.display='block';
+      updateWizardStep(2);
+      showToast('Video uploaded! Fill in details to publish ✓','ok');
+    },500)}
+    $('upPct').textContent=Math.round(p)+'%';
+    $('upProgFill').style.width=p+'%';
+    $('upStatus').textContent=msgs[Math.floor(p/14)]||msgs[msgs.length-1];
+  },200);
+}
+
+function shortUploaded(input){
+  if(!input.files[0])return;
+  const sp=$('shortPreviewContent');
+  sp.innerHTML=`<div style="text-align:center;padding:10px"><div style="font-size:2.5rem;margin-bottom:6px">📱</div><div style="font-size:.7rem;color:var(--green);font-weight:700">Short Loaded!</div><div style="font-size:.62rem;color:var(--text3);margin-top:2px">${input.files[0].name.slice(0,20)}</div></div>`;
+  showToast('Short uploaded! Fill details to publish ✓','ok');
+}
+
+function updateWizardStep(n){
+  for(let i=1;i<=5;i++){
+    const el=$(('ws'+i));if(!el)continue;
+    el.className='ws'+(i<n?' done':i===n?' active':'');
+  }
+}
+
+function selectThumb(el){
+  document.querySelectorAll('.thumb-opt').forEach(t=>t.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function selectVis(el,vis){
+  document.querySelectorAll('.vis-opt').forEach(v=>v.classList.remove('selected'));
+  el.classList.add('selected');
+  const ss=$('scheduleSection');
+  if(ss)ss.className='schedule-section'+(vis==='Schedule'?' open':'');
+}
+
+function publishVideo(){
+  showToast('🎉 Video published successfully! Live on YouTube ✓','ok');
+  setTimeout(()=>showToast('📧 Subscribers notified · 🔍 SEO indexed','info'),1200);
+  setTimeout(()=>showPage('videos'),2000);
+}
+
+function addTag(e){
+  if(e.key!=='Enter'&&e.key!==',')return;
+  e.preventDefault();
+  const input=$('tagInput');const val=input.value.trim();
+  if(!val)return;
+  const tag=document.createElement('span');
+  tag.className='tag-item';
+  tag.innerHTML=`${esc(val)}<button onclick="removeTag(this)">✕</button>`;
+  $('tagsWrap').insertBefore(tag,input);
+  input.value='';
+}
+function removeTag(btn){btn.closest('.tag-item').remove()}
+
+/* ══════════════════════════════════════
+   NAVIGATION & SIDEBAR
+══════════════════════════════════════ */
+const PAGE_CFG={
+  dashboard:{t:'Channel Studio',s:'Manage and grow your YouTube channel'},
+  'upload-long':{t:'Upload Long Video',s:'Videos longer than 60 seconds'},
+  'upload-short':{t:'Upload YouTube Short',s:'Vertical videos under 60 seconds'},
+  videos:{t:'Content Manager',s:'All videos, shorts, and live streams'},
+  analytics:{t:'Analytics',s:'Channel performance insights'},
+  comments:{t:'Comments',s:'Manage viewer comments'},
+  live:{t:'Live Streaming',s:'Go live with your audience'},
+  playlists:{t:'Playlists',s:'Organize your content'},
+  monetize:{t:'Monetization',s:'Earn from your content'},
+  subtitles:{t:'Subtitles & Captions',s:'Accessibility and reach'},
+  endscreen:{t:'End Screen & Cards',s:'Drive engagement in last 20 seconds'},
+};
+
+document.querySelectorAll('.ni,.sb-channel').forEach(n=>{
+  n.addEventListener('click',()=>{
+    const p=n.dataset.page;if(!p)return;
+    showPage(p);
+    document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));
+    n.classList.add('active');
+  });
+});
+
+function showPage(p){
+  document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  const el=document.getElementById('page-'+p);if(el)el.classList.add('active');
+  const nav=document.querySelector(`.ni[data-page="${p}"]`);if(nav)nav.classList.add('active');
+  document.getElementById('sidebar').classList.remove('mobile-show');
+}
+
+// Hamburger
+let sidebarMini=false;
+$('hamBtn').addEventListener('click',()=>{
+  const sb=$('sidebar');
+  if(window.innerWidth<=900){sb.classList.toggle('mobile-show');}
+  else{sidebarMini=!sidebarMini;sb.classList.toggle('mini',sidebarMini);}
+});
+document.addEventListener('click',e=>{
+  if(window.innerWidth<=900&&!$('sidebar').contains(e.target)&&e.target!==$('hamBtn'))
+    $('sidebar').classList.remove('mobile-show');
+});
+
+// Filter tabs
+function filterVideos(btn,type){
+  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  showToast(`Showing ${type==='all'?'all':type} videos`,'info');
+}
+function setPeriod(btn){
+  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  showToast(`Analytics: ${btn.textContent}`,'info');
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')document.querySelectorAll('.modal-bg.open').forEach(m=>m.classList.remove('open'));
+});
+
+// Drag and drop for drop zone
+const dz=$('dropZone');
+if(dz){
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+  dz.addEventListener('drop',e=>{
+    e.preventDefault();dz.classList.remove('drag');
+    const f=e.dataTransfer.files[0];
+    if(f&&f.type.startsWith('video/')){
+      const fakeInput={files:[f]};
+      $('upFileName').textContent=f.name;
+      startUpload(fakeInput);
+    } else showToast('Please drop a video file','err');
+  });
+}
+</script>
+</body>
+</html>
